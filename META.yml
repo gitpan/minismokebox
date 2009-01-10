@@ -1,0 +1,33 @@
+---
+abstract: ~
+author:
+  - 'Chris Williams <chris@bingosnet.co.uk>'
+build_requires:
+  Test::More: 0.47
+  Test::POE::Server::TCP: 0.12
+distribution_type: module
+generated_by: 'Module::Install version 0.77'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: minismokebox
+no_index:
+  directory:
+    - inc
+    - t
+    - examples
+requires:
+  Config::Tiny: 2.12
+  Event: 1.11
+  File::Spec: 0
+  POE: 1.0001
+  POE::Component::SmokeBox: 0.06
+  POE::Component::SmokeBox::Dists: 0.08
+  POE::Component::SmokeBox::Recent: 1
+  POE::XS::Queue::Array: 0.005
+  Pod::Usage: 1.00
+  perl: 5.6.0
+resources:
+  license: http://dev.perl.org/licenses/
+version: 0.01_01
