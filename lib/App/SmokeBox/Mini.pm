@@ -18,7 +18,7 @@ use vars qw($VERSION);
 
 use constant CPANURL => 'ftp://ftp.funet.fi/pub/CPAN/';
 
-$VERSION = '0.01_01';
+$VERSION = '0.01_02';
 
 $ENV{PERL5_MINISMOKEBOX} = $VERSION;
 
@@ -85,13 +85,13 @@ sub run {
     "h|help"      => sub { pod2usage(1); },
     "v|version"   => sub { $version = 1 },
     "d|debug"     => \$config{debug},
-    "p|perl"  	  => \$config{perl},
+    "p|perl=s" 	  => \$config{perl},
     "i|indices"   => \$config{indices},
     "r|recent"    => \$config{recent},
     "j|jobs=s"    => \$config{jobs},
     "b|backend=s" => \$config{backend},
     "a|author=s"  => \$config{author},
-    "p|package=s" => \$config{package},
+    "D|package=s" => \$config{package},
     "P|phalanx"   => \$config{phalanx},
     "u|url=s"	  => \$config{url},
   ) or pod2usage(2);

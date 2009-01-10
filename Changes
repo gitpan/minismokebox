@@ -1,5 +1,8 @@
 minismokebox
 ============
 
+0.01_02	Sat Jan 10 22:47:01 GMT 2009
+	- Slight issue with commandline options. Fixed.
+
 0.01_01	Sat Jan 10 22:09:09 GMT 2009
 	- Initial CPAN developer release
