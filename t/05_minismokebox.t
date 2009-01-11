@@ -126,6 +126,10 @@ sub _child_closed {
 sub _stdout {
   my ($heap, $input, $wheel_id) = @_[HEAP, ARG0, ARG1];
 #  print "Child process in wheel $wheel_id wrote to STDOUT: $input\n";
+  if ( $input =~ /^minismokebox/ ) {
+     diag("$input\n");
+     return;
+  }
   ok( ( scalar grep { $input =~ /\Q$_\E/ } @tests ), $input );
   return;
 }

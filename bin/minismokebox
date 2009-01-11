@@ -89,9 +89,9 @@ Keep an eye on the C</tmp> directory, a lot of test-suites leave droppings behin
 
 =back
 
-=head1 COMANND LINE OPTIONS
+=head1 COMMAND LINE OPTIONS
 
-Command line options override options given in the L</"CONFIGURATON FILE">
+Command line options override options given in the L</"CONFIGURATION FILE">
 
 =over
 

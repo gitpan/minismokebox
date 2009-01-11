@@ -7,6 +7,7 @@ use Config::Tiny;
 use File::Spec;
 use Cwd;
 use Getopt::Long;
+use Time::Duration qw(duration_exact);
 use POE;
 use POE::Component::SmokeBox;
 use POE::Component::SmokeBox::Smoker;
@@ -18,7 +19,7 @@ use vars qw($VERSION);
 
 use constant CPANURL => 'ftp://ftp.funet.fi/pub/CPAN/';
 
-$VERSION = '0.01_02';
+$VERSION = '0.01_03';
 
 $ENV{PERL5_MINISMOKEBOX} = $VERSION;
 
@@ -138,12 +139,35 @@ sub _start {
 	command => 'check',
      ),
   );
+  $self->{stats} = {
+	started => time(),
+	totaljobs => 0,
+	avg_run => 0,
+	min_run => 0,
+	max_run => 0,
+	_sum => 0,
+	idle => 0,
+	excess => 0,
+  };
   return;
 }
 
 sub _stop {
   my ($kernel,$self) = @_[KERNEL,OBJECT];
   $kernel->call( $self->{sbox}->session_id(), 'shutdown' );
+  my $finish = time();
+  my $cumulative = duration_exact( $finish - $self->{stats}->{started} );
+  my @stats = map { $self->{stats}->{$_} } qw(totaljobs idle excess avg_run min_run max_run);
+  $stats[$_] = duration_exact( $stats[$_] ) for 3 .. 5;
+  print "minismokebox started at: \t", scalar localtime($self->{stats}->{started}), "\n";
+  print "minismokebox finished at: \t", scalar localtime($finish), "\n";
+  print "minismokebox ran for: \t", $cumulative, "\n";
+  print "minismokebox tot jobs:\t", $stats[0], "\n";
+  print "minismokebox idle kills:\t", $stats[1], "\n" if $stats[1];
+  print "minismokebox excess kills:\t", $stats[2], "\n" if $stats[2];
+  print "minismokebox avg run: \t", $stats[3], "\n";
+  print "minismokebox min run: \t", $stats[4], "\n";
+  print "minismokebox max run: \t", $stats[5], "\n";
   return;
 }
 
@@ -255,6 +279,15 @@ sub _smoke {
   my $dist = $data->{job}->module();
   my ($result) = $data->{result}->results;
   print "Distribution: '$dist' finished with status '$result->{status}'\n";
+  my $run_time = $result->{end_time} - $result->{start_time};
+  $self->{stats}->{max_run} = $run_time if $run_time > $self->{stats}->{max_run};
+  $self->{stats}->{min_run} = $run_time if $self->{stats}->{min_run} == 0;
+  $self->{stats}->{min_run} = $run_time if $run_time < $self->{stats}->{min_run};
+  $self->{stats}->{_sum} += $run_time;
+  $self->{stats}->{totaljobs}++;
+  $self->{stats}->{avg_run} = $self->{stats}->{_sum} / $self->{stats}->{totaljobs};
+  $self->{stats}->{idle}++ if $result->{idle_kill};
+  $self->{stats}->{excess}++ if $result->{excess_kill};
   return;
 }
 

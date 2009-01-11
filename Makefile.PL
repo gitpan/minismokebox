@@ -11,6 +11,7 @@ build_requires 'Test::POE::Server::TCP' => 0.12;
 requires 'Config::Tiny' => 2.12;
 requires 'File::Spec' => 0;
 requires 'Pod::Usage' => '1.00';
+requires 'Time::Duration' => 1.06;
 requires 'POE' => 1.0001;
 requires 'POE::Component::SmokeBox' => 0.06;
 requires 'POE::Component::SmokeBox::Recent' => 1.00;

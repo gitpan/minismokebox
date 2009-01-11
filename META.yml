@@ -27,7 +27,8 @@ requires:
   POE::Component::SmokeBox::Recent: 1
   POE::XS::Queue::Array: 0.005
   Pod::Usage: 1.00
+  Time::Duration: 1.06
   perl: 5.6.0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.01_02
+version: 0.01_03
