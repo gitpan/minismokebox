@@ -19,7 +19,7 @@ use vars qw($VERSION);
 
 use constant CPANURL => 'ftp://ftp.funet.fi/pub/CPAN/';
 
-$VERSION = '0.02';
+$VERSION = '0.04';
 
 $ENV{PERL5_MINISMOKEBOX} = $VERSION;
 
@@ -106,6 +106,10 @@ sub run {
      my @jobs = _get_jobs_from_file( $config{jobs} );
      $config{jobs} = \@jobs if scalar @jobs;
   }
+
+  print "Running minismokebox with options:\n";
+  printf("%-20s %s\n", $_, $config{$_}) 
+	for grep { defined $config{$_} } qw(debug indices perl jobs backend author package phalanx url);
 
   my $self = bless \%config, $package;
 
