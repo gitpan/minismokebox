@@ -27,6 +27,7 @@ The following modules are required:
 	Config::Tiny => 2.12
 	File::Spec => 0
 	Pod::Usage => 1.00
+	Time::Duration => 1.06
 	POE => 1.0001
 	POE::Component::SmokeBox => 0.06
 	POE::Component::SmokeBox::Recent => 1.00;

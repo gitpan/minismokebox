@@ -19,7 +19,7 @@ use vars qw($VERSION);
 
 use constant CPANURL => 'ftp://ftp.funet.fi/pub/CPAN/';
 
-$VERSION = '0.01_03';
+$VERSION = '0.02';
 
 $ENV{PERL5_MINISMOKEBOX} = $VERSION;
 
