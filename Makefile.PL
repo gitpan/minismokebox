@@ -3,7 +3,7 @@ use inc::Module::Install;
 name 'minismokebox';
 author 'Chris Williams <chris@bingosnet.co.uk>';
 version_from 'lib/App/SmokeBox/Mini.pm';
-abstract_from 'lib/App/SmokeBox/Mini.pm';
+abstract_from 'bin/minismokebox';
 license 'perl';
 perl_version '5.006';
 build_requires 'Test::More' => 0.47;
