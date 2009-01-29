@@ -19,7 +19,7 @@ use vars qw($VERSION);
 
 use constant CPANURL => 'ftp://ftp.funet.fi/pub/CPAN/';
 
-$VERSION = '0.06';
+$VERSION = '0.08';
 
 $ENV{PERL5_MINISMOKEBOX} = $VERSION;
 
@@ -95,6 +95,7 @@ sub run {
     "D|package=s" => \$config{package},
     "P|phalanx"   => \$config{phalanx},
     "u|url=s"	  => \$config{url},
+    "R|reverse"   => \$config{reverse},
   ) or pod2usage(2);
 
   _display_version() if $version;
@@ -109,7 +110,7 @@ sub run {
 
   print "Running minismokebox with options:\n";
   printf("%-20s %s\n", $_, $config{$_}) 
-	for grep { defined $config{$_} } qw(debug indices perl jobs backend author package phalanx url);
+	for grep { defined $config{$_} } qw(debug indices perl jobs backend author package phalanx reverse url);
 
   my $self = bless \%config, $package;
 
@@ -265,6 +266,9 @@ sub _submission {
      warn $data->{error}, "\n";
      return;
   }
+  if ( $state eq 'recent' and $self->{reverse} ) {
+     @{ $data->{$state} } = reverse @{ $data->{$state} };
+  }
   foreach my $distro ( @{ $data->{$state} } ) {
      print "Submitting: $distro\n";
      $kernel->post( $self->{sbox}->session_id(), 'submit', event => '_smoke', job => 
@@ -274,6 +278,7 @@ sub _submission {
 	   module  => $distro,
         ),
      );
+     $self->{_jobs}++;
   }
   return;
 }
@@ -292,6 +297,9 @@ sub _smoke {
   $self->{stats}->{avg_run} = $self->{stats}->{_sum} / $self->{stats}->{totaljobs};
   $self->{stats}->{idle}++ if $result->{idle_kill};
   $self->{stats}->{excess}++ if $result->{excess_kill};
+  $self->{_jobs}--;
+  return if $self->{_jobs};
+  $self->{sbox}->shutdown();
   return;
 }
 

@@ -28,6 +28,7 @@ minismokebox - a small lightweight SmokeBox
    --author PATTERN  - specify a CPAN ID to search for modules to smoke;
    --package PATTERN - specify a search pattern to match against distributions;
    --phalanx	     - smoke the Phalanx 100 distributions;
+   --reverse	     - specify that RECENT uploads are smoked in reverse order;
    --url URI	     - The URI of a CPAN mirror to use, default is Funet FTP;
 
 =head1 DESCRIPTION
@@ -143,6 +144,10 @@ CPAN author whose CPAN ID begins with C<BI> and a list of the Phalanx 100 distri
 
 Explicitly tell C<minismokebox> to smoke the recent uploads to CPAN. This is the default action if none of the following
 actions are given. 
+
+=item C<--reverse>
+
+If specified C<minismokebox> will smoke recent uploads in reverse order.
 
 =item C<--jobs FILE>
 

@@ -87,7 +87,7 @@ sub testd_registered {
   my ($kernel,$heap) = @_[KERNEL,HEAP];
   $heap->{wheel} = POE::Wheel::Run->new(
     Program => $^X,
-    ProgramArgs => [ 'bin/minismokebox', '--backend', 'Test::SmokeBox::Mini', '--url', $heap->{url} ],
+    ProgramArgs => [ 'bin/minismokebox', '--backend', 'Test::SmokeBox::Mini', '--url', $heap->{url}, '--reverse' ],
     StdoutEvent => '_stdout',    # Received data from the child's STDOUT.
     StderrEvent => '_stderr',    # Received data from the child's STDERR.
     ErrorEvent  => '_oops',          # An I/O error occurred.

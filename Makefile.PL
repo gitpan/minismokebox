@@ -4,19 +4,23 @@ name 'minismokebox';
 author 'Chris Williams <chris@bingosnet.co.uk>';
 version_from 'lib/App/SmokeBox/Mini.pm';
 abstract_from 'bin/minismokebox';
+install_script 'bin/minismokebox';
 license 'perl';
 perl_version '5.006';
 build_requires 'Test::More' => 0.47;
 build_requires 'Test::POE::Server::TCP' => 0.12;
+build_requires 'POE::Filter::HTTP::Parser' => 0.08;
+build_requires 'HTTP::Response' => 0;
+build_requires 'HTTP::Date' => 0;
 requires 'Config::Tiny' => 2.12;
 requires 'File::Spec' => 0;
 requires 'Pod::Usage' => '1.00';
 requires 'Time::Duration' => 1.06;
 requires 'POE' => 1.0001;
 requires 'POE::Component::SmokeBox' => 0.06;
-requires 'POE::Component::SmokeBox::Recent' => 1.00;
+requires 'POE::Component::SmokeBox::Recent' => 1.08;
 requires 'POE::Component::SmokeBox::Dists' => 0.08;
-if ( can_cc() ) {
+if ( !( can_use('Event') and can_use('POE::XS::Queue::Array') ) and can_cc() ) {
 print <<NOTICE;
 
 \a--------------------------------------------------------------
@@ -38,6 +42,5 @@ if ( $prompt =~ /^Y/i ) {
 }
 
 }
-install_script 'bin/minismokebox';
 clean_files '.smokebox jobs.txt';
 WriteAll();

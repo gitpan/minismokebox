@@ -1,6 +1,14 @@
 minismokebox
 ============
 
+0.08	Thu Jan 29 21:16:38 GMT 2009
+	- added --reverse option 
+	- Improved tests
+	- Refined Makefile.PL
+
+0.06	Tue Jan 13 21:04:40 GMT 2009
+	- Fixed META.yml, abstract was wrong.
+
 0.04	Mon Jan 12 16:20:11 GMT 2009
 	- Print out the options we are going to use
 
