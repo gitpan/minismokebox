@@ -19,7 +19,7 @@ use vars qw($VERSION);
 
 use constant CPANURL => 'ftp://ftp.funet.fi/pub/CPAN/';
 
-$VERSION = '0.10';
+$VERSION = '0.12';
 
 $ENV{PERL5_MINISMOKEBOX} = $VERSION;
 
@@ -102,7 +102,9 @@ sub run {
 
   $config{perl} = $^X unless $config{perl} and -e $config{perl};
   $ENV{PERL5_SMOKEBOX_DEBUG} = 1 if $config{debug};
-  $ENV{AUTOMATED_TESTING} = 1; # We need this because some backends do not set it.
+  $ENV{AUTOMATED_TESTING} = 1;   # We need this because some backends do not set it.
+  $ENV{PERL_MM_USE_DEFAULT} = 1; # And this.
+  $ENV{PERL_EXTUTILS_AUTOINSTALL} = '--defaultdeps'; # Got this from CPAN::Reporter::Smoker. Cheers, xdg!
 
   if ( $config{jobs} and -e $config{jobs} ) {
      my @jobs = _get_jobs_from_file( $config{jobs} );
