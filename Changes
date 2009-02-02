@@ -1,6 +1,10 @@
 minismokebox
 ============
 
+0.10	Mon Feb  2 13:14:06 GMT 2009
+	- Always set AUTOMATED_TESTING env var. Some backends
+	  don't set it, so we must. *sigh*
+
 0.08	Thu Jan 29 21:16:38 GMT 2009
 	- added --reverse option 
 	- Improved tests
