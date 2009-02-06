@@ -1,6 +1,10 @@
 minismokebox
 ============
 
+0.14	Fri Feb  6 12:27:53 GMT 2009
+	- Fixed refcount leaks. 
+	- Updated dependencies to fixed versions.
+
 0.12	Mon Feb  2 22:12:15 GMT 2009
 	- Added some more env vars that needed setting.
 

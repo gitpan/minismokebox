@@ -9,7 +9,7 @@ build_requires:
   Test::More: 0.47
   Test::POE::Server::TCP: 0.12
 distribution_type: module
-generated_by: 'Module::Install version 0.78'
+generated_by: 'Module::Install version 0.79'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -24,12 +24,12 @@ requires:
   Config::Tiny: 2.12
   File::Spec: 0
   POE: 1.0001
-  POE::Component::SmokeBox: 0.06
+  POE::Component::SmokeBox: 0.14
   POE::Component::SmokeBox::Dists: 0.08
-  POE::Component::SmokeBox::Recent: 1.08
+  POE::Component::SmokeBox::Recent: 1.12
   Pod::Usage: 1.00
   Time::Duration: 1.06
   perl: 5.6.0
 resources:
   license: http://dev.perl.org/licenses/
-version: 0.12
+version: 0.14

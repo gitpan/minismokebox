@@ -19,7 +19,7 @@ use vars qw($VERSION);
 
 use constant CPANURL => 'ftp://ftp.funet.fi/pub/CPAN/';
 
-$VERSION = '0.12';
+$VERSION = '0.14';
 
 $ENV{PERL5_MINISMOKEBOX} = $VERSION;
 
@@ -281,7 +281,6 @@ sub _submission {
 	   module  => $distro,
         ),
      );
-     $self->{_jobs}++;
   }
   return;
 }
@@ -301,8 +300,6 @@ sub _smoke {
   $self->{stats}->{idle}++ if $result->{idle_kill};
   $self->{stats}->{excess}++ if $result->{excess_kill};
   $self->{_jobs}--;
-  return if $self->{_jobs};
-  $self->{sbox}->shutdown();
   return;
 }
 
