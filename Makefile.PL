@@ -37,6 +37,7 @@ NOTICE
 my $prompt = prompt( 'Do you want to install \'Event\' and \'POE::XS::Queue::Array\' [Y/n]?', 'Y' );
 
 if ( $prompt =~ /^Y/i ) {
+  requires 'POE::Loop::Event' => 0;
   requires 'Event' => 1.11;
   requires 'POE::XS::Queue::Array' => 0.005;
 }

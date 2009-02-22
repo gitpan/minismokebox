@@ -1,6 +1,10 @@
 minismokebox
 ============
 
+0.16	Sun Feb 22 21:32:38 GMT 2009
+	- Specify the POE::Loop::Event dependency explicitly 
+	  if the user wants Event.
+
 0.14	Fri Feb  6 12:27:53 GMT 2009
 	- Fixed refcount leaks. 
 	- Updated dependencies to fixed versions.
