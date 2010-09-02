@@ -12,7 +12,7 @@ build_requires:
 configure_requires:
   ExtUtils::MakeMaker: 6.42
 distribution_type: module
-generated_by: 'Module::Install version 0.99'
+generated_by: 'Module::Install version 1.00'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -26,13 +26,13 @@ no_index:
 provides:
   App::SmokeBox::Mini:
     file: lib/App/SmokeBox/Mini.pm
-    version: 0.28
+    version: 0.30
   App::SmokeBox::Mini::Plugin:
     file: lib/App/SmokeBox/Mini/Plugin.pm
-    version: 0.28
+    version: 0.30
   POE::Component::SmokeBox::Backend::Test::SmokeBox::Mini:
     file: lib/POE/Component/SmokeBox/Backend/Test/SmokeBox/Mini.pm
-    version: 0.28
+    version: 0.30
 requires:
   Config::Tiny: 2.12
   File::Path: 0
@@ -50,4 +50,4 @@ resources:
   homepage: http://github.com/bingos/minismokebox/tree
   license: http://dev.perl.org/licenses/
   repository: git://github.com/bingos/minismokebox.git
-version: 0.28
+version: 0.30
