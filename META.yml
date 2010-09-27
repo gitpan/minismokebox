@@ -26,14 +26,15 @@ no_index:
 provides:
   App::SmokeBox::Mini:
     file: lib/App/SmokeBox/Mini.pm
-    version: 0.30
+    version: 0.32
   App::SmokeBox::Mini::Plugin:
     file: lib/App/SmokeBox/Mini/Plugin.pm
-    version: 0.30
+    version: 0.32
   POE::Component::SmokeBox::Backend::Test::SmokeBox::Mini:
     file: lib/POE/Component/SmokeBox/Backend/Test/SmokeBox/Mini.pm
-    version: 0.30
+    version: 0.32
 requires:
+  App::SmokeBox::PerlVersion: 0.06
   Config::Tiny: 2.12
   File::Path: 0
   File::Spec: 0
@@ -50,4 +51,4 @@ resources:
   homepage: http://github.com/bingos/minismokebox/tree
   license: http://dev.perl.org/licenses/
   repository: git://github.com/bingos/minismokebox.git
-version: 0.30
+version: 0.32
