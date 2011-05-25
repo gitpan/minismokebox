@@ -11,14 +11,7 @@ use Getopt::Long;
 use Time::Duration qw(duration_exact);
 use Module::Pluggable search_path => ['App::SmokeBox::Mini::Plugin'];
 use Module::Load;
-BEGIN {
-  no strict 'refs';
-  no warnings;
-  *{ 'POE::Kernel::USE_SIGCHLD' } = sub () { 1 };
-}
-BEGIN {
-  use POE;
-}
+use POE;
 use POE::Component::SmokeBox;
 use POE::Component::SmokeBox::Smoker;
 use POE::Component::SmokeBox::Job;
@@ -30,13 +23,13 @@ use vars qw($VERSION);
 
 use constant CPANURL => 'ftp://cpan.cpantesters.org/CPAN/';
 
-$VERSION = '0.44';
+$VERSION = '0.46';
 
 $ENV{PERL5_MINISMOKEBOX} = $VERSION;
 
 sub _smokebox_dir {
-  return $ENV{PERL5_SMOKEBOX_DIR} 
-     if  exists $ENV{PERL5_SMOKEBOX_DIR} 
+  return $ENV{PERL5_SMOKEBOX_DIR}
+     if  exists $ENV{PERL5_SMOKEBOX_DIR}
      && defined $ENV{PERL5_SMOKEBOX_DIR};
 
   my @os_home_envs = qw( APPDATA HOME USERPROFILE WINDIR SYS$LOGIN );
@@ -74,7 +67,9 @@ sub _read_ts_data {
     while (<$fh>) {
       chomp;
       my ($prefix,$ts) = $_ =~ /^(\[.+?\])([\d\.]+)$/;
-      $data{ $prefix } = $ts;
+      if ( $prefix and $ts ) {
+        $data{ $prefix } = $ts;
+      }
     }
     close $fh;
   }
@@ -98,11 +93,11 @@ sub _get_jobs_from_file {
 }
 
 sub _display_version {
-  print "minismokebox version ", $VERSION, 
+  print "minismokebox version ", $VERSION,
     ", powered by POE::Component::SmokeBox ", POE::Component::SmokeBox->VERSION, "\n\n";
   print <<EOF;
 Copyright (C) 2009 Chris 'BinGOs' Williams
-This module may be used, modified, and distributed under the same terms as Perl itself. 
+This module may be used, modified, and distributed under the same terms as Perl itself.
 Please see the license that came with your Perl distribution for details.
 EOF
   exit;
@@ -147,7 +142,7 @@ sub run {
   }
 
   print "Running minismokebox with options:\n";
-  printf("%-20s %s\n", $_, $config{$_}) 
+  printf("%-20s %s\n", $_, $config{$_})
 	for grep { defined $config{$_} } qw(debug indices perl jobs backend author package phalanx reverse url home nolog random noepoch);
 
   if ( $config{home} and ! -e $config{home} ) {
@@ -163,11 +158,14 @@ sub run {
 
   $self->{_tsdata} = _read_ts_data();
 
-  $self->{sbox} = POE::Component::SmokeBox->spawn( 
+  my $env = delete $self->{sections}->{ENVIRONMENT} || { };
+  $env->{HOME} = $self->{home} if $self->{home};
+
+  $self->{sbox} = POE::Component::SmokeBox->spawn(
 	smokers => [
 	   POE::Component::SmokeBox::Smoker->new(
 		perl => $self->{perl},
-    ( $self->{home} ? ( env => { HOME => $self->{home} } ) : () ),
+    ( scalar keys %{ $env } ? ( env => $env ) : () ),
 	   ),
 	],
   );
@@ -188,7 +186,7 @@ sub _start {
   my ($kernel,$self) = @_[KERNEL,OBJECT];
   $self->{session_id} = $_[SESSION]->ID();
   # Run a check to make sure the backend exists in the designated perl
-  $kernel->post( $self->{sbox}->session_id(), 'submit', event => '_check', job => 
+  $kernel->post( $self->{sbox}->session_id(), 'submit', event => '_check', job =>
      POE::Component::SmokeBox::Job->new(
 	( $self->{backend} ? ( type => $self->{backend} ) : () ),
 	command => 'check',
@@ -277,7 +275,7 @@ sub _perl_version {
     $self->{_epoch} = $self->{_tsdata}->{ $self->{_tsprefix} } unless $self->{noepoch};
   }
   if ( $self->{indices} ) {
-     $kernel->post( $self->{sbox}->session_id(), 'submit', event => '_indices', job => 
+     $kernel->post( $self->{sbox}->session_id(), 'submit', event => '_indices', job =>
         POE::Component::SmokeBox::Job->new(
 	   ( $self->{backend} ? ( type => $self->{backend} ) : () ),
 	   command => 'index',
@@ -306,7 +304,7 @@ sub _search {
   if ( $self->{jobs} and ref $self->{jobs} eq 'ARRAY' ) {
      foreach my $distro ( @{ $self->{jobs} } ) {
         print "Submitting: $distro\n";
-        $kernel->post( $self->{sbox}->session_id(), 'submit', event => '_smoke', job => 
+        $kernel->post( $self->{sbox}->session_id(), 'submit', event => '_smoke', job =>
            POE::Component::SmokeBox::Job->new(
 	      ( $self->{backend} ? ( type => $self->{backend} ) : () ),
 	      command => 'smoke',
@@ -317,7 +315,7 @@ sub _search {
      }
   }
   if ( $self->{recent} ) {
-    POE::Component::SmokeBox::Recent->recent( 
+    POE::Component::SmokeBox::Recent->recent(
         url => $self->{url} || CPANURL,
         event => 'recent',
         rss => $self->{rss},
@@ -355,7 +353,7 @@ sub _search {
     );
   }
   return if !$self->{recent} and ( $self->{package} or $self->{author} or $self->{phalanx} or ( $self->{jobs} and ref $self->{jobs} eq 'ARRAY' ) );
-  POE::Component::SmokeBox::Recent->recent( 
+  POE::Component::SmokeBox::Recent->recent(
       url => $self->{url} || CPANURL,
       event => 'recent',
       rss => $self->{rss},
@@ -375,7 +373,7 @@ sub _submission {
   }
   foreach my $distro ( @{ $data->{$state} } ) {
      print "Submitting: $distro\n";
-     $kernel->post( $self->{sbox}->session_id(), 'submit', event => '_smoke', job => 
+     $kernel->post( $self->{sbox}->session_id(), 'submit', event => '_smoke', job =>
         POE::Component::SmokeBox::Job->new(
 	   ( $self->{backend} ? ( type => $self->{backend} ) : () ),
 	   command => 'smoke',
