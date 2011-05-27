@@ -1,5 +1,6 @@
 bin/minismokebox
 Changes
+Changes.old
 examples/synopsis.pl
 inc/Module/Install.pm
 inc/Module/Install/AutoLicense.pm
@@ -29,6 +30,8 @@ t/05_minismokebox.t
 t/06_xobekomsinim.t
 t/07_plugins.t
 t/08_since_epoch.t
+t/09_environment.t
+t/10_environment.t
 t/99_pod.t
 t/99_pod_coverage.t
 t/lib/App/SmokeBox/Mini/Plugin/Test.pm

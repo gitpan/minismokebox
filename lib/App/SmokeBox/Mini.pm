@@ -11,6 +11,9 @@ use Getopt::Long;
 use Time::Duration qw(duration_exact);
 use Module::Pluggable search_path => ['App::SmokeBox::Mini::Plugin'];
 use Module::Load;
+use if ( $^O eq 'linux' ), "POE::Kernel" => { loop => 'POE::XS::Loop::EPoll' };
+use if ( $^O !~ /^(linux|MSWin32)$/ ), "POE::Kernel" => { loop => 'POE::XS::Loop::Poll' };
+use if ( $^O eq 'MSWin32' ), "POE::Kernel" => { loop => 'POE::Loop::Event' };
 use POE;
 use POE::Component::SmokeBox;
 use POE::Component::SmokeBox::Smoker;
@@ -23,7 +26,7 @@ use vars qw($VERSION);
 
 use constant CPANURL => 'ftp://cpan.cpantesters.org/CPAN/';
 
-$VERSION = '0.46';
+$VERSION = '0.48';
 
 $ENV{PERL5_MINISMOKEBOX} = $VERSION;
 
@@ -53,7 +56,7 @@ sub _read_config {
   if ( defined $Config->{_} ) {
     my $root = delete $Config->{_};
 	  @config = map { $_, $root->{$_} } grep { exists $root->{$_} }
-		              qw(debug perl indices recent backend url home nolog rss random noepoch);
+		              qw(debug perl indices recent backend url home nolog rss random noepoch perlenv);
   }
   push @config, 'sections', $Config if scalar keys %{ $Config };
   return @config;
@@ -96,7 +99,7 @@ sub _display_version {
   print "minismokebox version ", $VERSION,
     ", powered by POE::Component::SmokeBox ", POE::Component::SmokeBox->VERSION, "\n\n";
   print <<EOF;
-Copyright (C) 2009 Chris 'BinGOs' Williams
+Copyright (C) 2011 Chris 'BinGOs' Williams
 This module may be used, modified, and distributed under the same terms as Perl itself.
 Please see the license that came with your Perl distribution for details.
 EOF
@@ -126,6 +129,7 @@ sub run {
     "noepoch"   => \$config{noepoch},
     "rss"       => \$config{rss},
     "random"    => \$config{random},
+    "perlenv"   => \$config{perlenv},
   ) or pod2usage(2);
 
   _display_version() if $version;
@@ -141,9 +145,16 @@ sub run {
      $config{jobs} = \@jobs if scalar @jobs;
   }
 
+  my $env = delete $config{sections}->{ENVIRONMENT} || { };
+
   print "Running minismokebox with options:\n";
   printf("%-20s %s\n", $_, $config{$_})
-	for grep { defined $config{$_} } qw(debug indices perl jobs backend author package phalanx reverse url home nolog random noepoch);
+	for grep { defined $config{$_} } qw(debug indices perl jobs backend author package
+                                      phalanx reverse url home nolog random noepoch perlenv);
+  if ( keys %{ $env } ) {
+    print "ENVIRONMENT:\n";
+    printf("%-20s %s\n", $_, $env->{$_}) for keys %{ $env };
+  }
 
   if ( $config{home} and ! -e $config{home} ) {
      mkpath( $config{home} ) or die "Could not create '$config{home}': $!\n";
@@ -158,14 +169,16 @@ sub run {
 
   $self->{_tsdata} = _read_ts_data();
 
-  my $env = delete $self->{sections}->{ENVIRONMENT} || { };
-  $env->{HOME} = $self->{home} if $self->{home};
+  $self->{env} = $env;
+  $self->{env}->{HOME} = $self->{home} if $self->{home};
+  $self->{env}->{PERL5LIB} = $ENV{PERL5LIB}
+     if $self->{perlenv} and $ENV{PERL5LIB};
 
   $self->{sbox} = POE::Component::SmokeBox->spawn(
 	smokers => [
 	   POE::Component::SmokeBox::Smoker->new(
 		perl => $self->{perl},
-    ( scalar keys %{ $env } ? ( env => $env ) : () ),
+    ( scalar keys %{ $self->{env} } ? ( env => $self->{env} ) : () ),
 	   ),
 	],
   );
