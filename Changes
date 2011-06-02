@@ -1,4 +1,15 @@
 ==============================
+2011-06-02 23:49:06 +0100 0.54
+==============================
+
+  commit 2efa69f765fd2ab366e3c2c41620db04017d2f92
+  Author: Chris 'BinGOs' Williams <chris@bingosnet.co.uk>
+  Date:   Thu Jun 2 23:04:07 2011 +0100
+  
+    Fix a blunder with the previous release. Needed to affect which loop
+    was loaded in the main module. 
+
+==============================
 2011-06-02 20:01:26 +0100 0.52
 ==============================
 
