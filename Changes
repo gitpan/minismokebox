@@ -1,4 +1,17 @@
 ==============================
+2011-06-02 20:01:26 +0100 0.52
+==============================
+
+  commit 3810b1a7f17527f79f86621fb95c32ebff259f2b
+  Author: Chris 'BinGOs' Williams <chris@bingosnet.co.uk>
+  Date:   Thu Jun 2 20:01:26 2011 +0100
+  
+    Use POE::Loop::Event on MacOSX (darwin) because of problems with
+    POE::XS::Loop::Poll
+
+    Reported by Nigel Horne [rt.cpan.org #68608] 
+
+==============================
 2011-06-01 18:18:25 +0100 0.50
 ==============================
 
