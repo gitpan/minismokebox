@@ -1,18 +1,19 @@
 ---
-abstract: 'a small lightweight SmokeBox'
+abstract: ~
 author:
   - 'Chris Williams <chris@bingosnet.co.uk>'
 build_requires:
-  ExtUtils::MakeMaker: 6.42
+  ExtUtils::MakeMaker: 6.59
   HTTP::Date: 0
   HTTP::Response: 0
   POE::Filter::HTTP::Parser: 1.06
   Test::More: 0.47
   Test::POE::Server::TCP: 0.12
 configure_requires:
-  ExtUtils::MakeMaker: 6.42
+  ExtUtils::MakeMaker: 6.59
 distribution_type: module
-generated_by: 'Module::Install version 1.01'
+dynamic_config: 1
+generated_by: 'Module::Install version 1.06'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -26,13 +27,16 @@ no_index:
 provides:
   App::SmokeBox::Mini:
     file: lib/App/SmokeBox/Mini.pm
-    version: 0.54
+    version: 0.56
   App::SmokeBox::Mini::Plugin:
     file: lib/App/SmokeBox/Mini/Plugin.pm
-    version: 0.54
+    version: 0.56
   POE::Component::SmokeBox::Backend::Test::SmokeBox::Mini:
     file: lib/POE/Component/SmokeBox/Backend/Test/SmokeBox/Mini.pm
-    version: 0.54
+    version: 0.56
+  minismokebox:
+    file: lib/minismokebox.pm
+    version: 0.56
 requires:
   App::SmokeBox::PerlVersion: 0.06
   Config::Tiny: 2.12
@@ -49,8 +53,9 @@ requires:
   Pod::Usage: 1.00
   Time::Duration: 1.06
   perl: 5.6.0
+  unless: 0.02
 resources:
-  homepage: http://github.com/bingos/minismokebox/tree
+  homepage: https://github.com/bingos/minismokebox/tree
   license: http://dev.perl.org/licenses/
   repository: git://github.com/bingos/minismokebox.git
-version: 0.54
+version: 0.56
